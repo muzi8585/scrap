@@ -1,7 +1,9 @@
 
+import type { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { closeParty, openParty, openTab } from './store/uiSlice';
 import type { TabKey } from './store/uiSlice';
+
 import Dashboard from './components/Dashboard';
 import StockEntries from './components/StockEntries';
 import Payments from './components/Payments';
@@ -26,7 +28,7 @@ export default function App() {
   const tab = useAppSelector((state) => state.ui.tab);
   const partyId = useAppSelector((state) => state.ui.partyId);
 
-  const screens = {
+  const screens: Record<TabKey, ReactElement> = {
     dashboard: <Dashboard />,
     stock: <StockEntries />,
     payments: <Payments />,
@@ -45,9 +47,7 @@ export default function App() {
 
   return (
     <div className="wrap">
-      <div className="row">
-        <h1>Scrap Business Manager</h1>
-      </div>
+      <h1>Scrap Business Manager</h1>
 
       <nav>
         {TABS.map(([key, label]) => (
