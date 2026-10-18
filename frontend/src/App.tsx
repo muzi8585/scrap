@@ -1,9 +1,7 @@
-import type { ReactElement } from 'react';
+
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { logout } from './store/authSlice';
 import { closeParty, openParty, openTab } from './store/uiSlice';
 import type { TabKey } from './store/uiSlice';
-import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import StockEntries from './components/StockEntries';
 import Payments from './components/Payments';
@@ -25,19 +23,19 @@ const TABS: [TabKey, string][] = [
 
 export default function App() {
   const dispatch = useAppDispatch();
-  const loggedIn = useAppSelector((state) => state.auth.loggedIn);
   const tab = useAppSelector((state) => state.ui.tab);
   const partyId = useAppSelector((state) => state.ui.partyId);
 
-  if (!loggedIn) return <Login />;
-
-  const screens: Record<TabKey, ReactElement> = {
+  const screens = {
     dashboard: <Dashboard />,
     stock: <StockEntries />,
     payments: <Payments />,
     expenses: <Expenses />,
     parties: partyId ? (
-      <PartyStatement id={partyId} onBack={() => dispatch(closeParty())} />
+      <PartyStatement
+        id={partyId}
+        onBack={() => dispatch(closeParty())}
+      />
     ) : (
       <Parties onOpen={(id) => dispatch(openParty(id))} />
     ),
@@ -49,15 +47,20 @@ export default function App() {
     <div className="wrap">
       <div className="row">
         <h1>Scrap Business Manager</h1>
-        <button className="btn sm" onClick={() => dispatch(logout())}>Log out</button>
       </div>
+
       <nav>
         {TABS.map(([key, label]) => (
-          <button key={key} className={'tab' + (tab === key ? ' on' : '')} onClick={() => dispatch(openTab(key))}>
+          <button
+            key={key}
+            className={'tab' + (tab === key ? ' on' : '')}
+            onClick={() => dispatch(openTab(key))}
+          >
             {label}
           </button>
         ))}
       </nav>
+
       {screens[tab]}
     </div>
   );
